@@ -6,6 +6,7 @@ import motor.motor_asyncio
 import os
 import config
 import sys
+import asyncio
 
 bot = commands.Bot(command_prefix="!", disableEveryone=False, intents=discord.Intents.all(), owner_id=config.owner_id)
 
@@ -25,9 +26,9 @@ def restart_bot():
 @bot.command()
 async def restart(ctx):
     if ctx.author.id == config.owner_id:
-        message = await ctx.send("Bot restarting.")
+        await ctx.send("Bot restarting...")
         restart_bot()
-        await message.edit("Bot restarted")
+        print(f"Bot restarted requested by: {ctx.author.name} : {ctx.author.id}")
     else:
         await ctx.channel.purge(limit=1)
 
