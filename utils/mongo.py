@@ -96,7 +96,7 @@ class Document:
     
     @staticmethod
     def __ensure_dict(data):
-        assert isinstance(data, collections.abc.Mappiung)
+        assert isinstance(data, collections.abc.Mapping)
 
     @staticmethod
     def __ensure_id(data):

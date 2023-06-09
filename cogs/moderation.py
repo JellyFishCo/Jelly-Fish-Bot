@@ -42,5 +42,41 @@ class Moderation(commands.Cog):
             await ctx.send("I do not have the right permissions!\nI am missing the `ban_members` permission.")
         else:
             print(error)
+
+    async def get_banned_users(ctx: discord.AutocompleteContext):
+        banned_users = ctx.interaction.guild.bans()
+        if banned_users == None:
+            return
+        choices = []
+        async for ban_entry in banned_users:
+            user = ban_entry.user
+            choice = f"{user.name} ({user.id})"
+            choices.append(choice)
+        return choices
+    
+    @commands.slash_command(name="unban", description="Unbans the specified user.")
+    @commands.has_guild_permissions(ban_members=True)
+    @commands.bot_has_guild_permissions(ban_members=True)
+    async def unban(self, ctx, user: discord.Option(str, autocomplete=discord.utils.basic_autocomplete(get_banned_users))):
+        try:
+            await ctx.defer()
+            user_id = int(user.split("(")[-1].split(")")[0])
+            user = await self.bot.fetch_user(user_id)
+            await ctx.guild.unban(user)
+            embed = discord.Embed(title="Successfully Unbanned User.", description=f"I have successfully unbanned {user.name} for you!", color=discord.Color.green())
+            await ctx.followup.send(embed=embed)
+        except Exception as e:
+            await ctx.respond(f"Error unbanning user: ```\n{e}```")
+            print(e)
+    
+    @unban.error
+    async def unban_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("You do not have permission to run this command!\nYou are missing the `ban_members` permission.")
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.send("I do not have the right permissions!\nI am missing the `ban_members` permission.")
+        else:
+            print(error)
+
 def setup(bot):
     bot.add_cog(Moderation(bot))
