@@ -138,5 +138,14 @@ class Moderation(commands.Cog):
         except discord.HTTPException:
             await ctx.send("You are trying to delete messages that are over 14 days old.")
 
+    @purge.error
+    async def purge_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send("You do not have permission to run this command!\nYou are missing the `manage_messages` permission.")
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.send("I do not have the right permissions!\nI am missing the `manage_messages` permission.")
+        else:
+            print(error)
+
 def setup(bot):
     bot.add_cog(Moderation(bot))
