@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
 import motor.motor_asyncio
-# TODO: write custom mongo helper.
-# from utils.mongo import Document
+from utils.mongo import Document
 import os
 import config
 import sys
@@ -16,8 +15,7 @@ async def on_ready():
 
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="me getting developed"))
 
-    # TODO: Add database.
-    # print("Initilized Database\n-----")
+    print("Initilized Database\n-----")
 
 
 def restart_bot():
@@ -33,7 +31,13 @@ async def restart(ctx):
         await ctx.channel.purge(limit=1)
 
 if __name__ == "__main__":
-    # TODO: Add all the documents here and init db connection.
+    bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
+    # TODO: This text field should change from "development" to "production" when released.
+    bot.db = bot.mongo["development"]
+    bot.bans = Document(bot.db, "bans")
+    bot.kicks = Document(bot.db, "kicks")
+    bot.warns = Document(bot.db, "warns")
+    bot.suggest = Document(bot.db, "suggest")
     for file in os.listdir('./cogs'):
         if file.endswith(".py") and not file.startswith("_"):
             bot.load_extension(f"cogs.{file[:-3]}")
