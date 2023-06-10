@@ -1,0 +1,5 @@
+py-cord
+discord-ext-buttons
+requests
+flask
+requests-oauthlib

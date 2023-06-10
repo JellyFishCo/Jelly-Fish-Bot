@@ -4,7 +4,7 @@
 ## What is the purpose of Jelly Fish Bot?
 The purpose of the Jelly Fish Bot is to fix all of the issues that MEE6 has, the bot will contian all features that MEE6 currently has without the paywall. Well organised dashboard easy to use features etc.  
 
-## Why is this bot better than MEE6?
+## Why is this bot better than other bots?
 We don't block any of our features behind a paywall, and its open source! Any one can submit a pull request and contribute to the bot and maybe have their code added to the bot itself.  
 
 ## How do i self host?
