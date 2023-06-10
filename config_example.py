@@ -1,3 +1,4 @@
+# Main bot requirements
 owner_id = 12345678910
 token = "enter bot token here"
 # Go to mongodb.com/atlas to get a free database.
