@@ -1,0 +1,16 @@
+<!-- select_guild.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Guild</title>
+</head>
+<body>
+    <h1>Select a Guild</h1>
+    <ul>
+        {% for guild in guilds %}
+            <li><a href="{{ url_for('welcome', guild_id=guild.id) }}">{{ guild.name }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

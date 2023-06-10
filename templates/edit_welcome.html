@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Welcome Message</title>
+</head>
+<body>
+  <h1>Welcome Message</h1>
+  <form method="POST" action="{{ url_for('save_welcome_message', guild_id=guild_id) }}">
+    <label for="channel">Select Channel:</label>
+    <select name="channel" id="channel">
+      {% for channel in channels %}
+        <option value="{{ channel.id }}">{{ channel.name }}</option>
+      {% endfor %}
+    </select>
+    <br><br>
+    <label for="message">Welcome Message:</label>
+    <textarea name="message" id="message" rows="5" cols="50"></textarea>
+    <br><br>
+    <input type="submit" value="Save Welcome Message">
+  </form>
+</body>
+</html>

@@ -21,6 +21,12 @@ async def on_ready():
 def restart_bot():
     os.execv(sys.executable, ['python'] + sys.argv)
 
+async def save_welcome_message(data):
+    bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
+    bot.db = bot.mongo["development"]
+    welcome = Document(bot.db, "welcome")
+    await welcome.insert(data)
+
 @bot.command()
 async def restart(ctx):
     if ctx.author.id == config.owner_id:
