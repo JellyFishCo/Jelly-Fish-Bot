@@ -7,6 +7,8 @@ app = Flask(__name__)
 app.secret_key = config.app_secret_key
 app.config['SESSION_COOKIE_NAME'] = 'discord_login'
 
+DEBUG = True
+
 @app.route('/')
 def index():
     return redirect('/login')
@@ -68,10 +70,12 @@ async def save_welcome_message(guild_id):
         message = request.form['message']
         
         data = {"channelid": channel_id, "guild_id": guild_id, "message": message}
-
-        await bot.save_welcome_message(data)
+        try:
+            await bot.save_welcome_message(data)
+        except:
+            print("e")
         return 'Welcome message has been successfully saved.'
     return redirect('/login')
 
 if __name__ == '__main__':
-    app.run(ssl_context=('server.crt', 'server.key'))
+    app.run(debug=DEBUG, ssl_context=('server.crt', 'server.key'))

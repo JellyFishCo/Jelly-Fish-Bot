@@ -27,6 +27,7 @@ async def save_welcome_message(data):
     welcome = Document(bot.db, "welcome")
     await welcome.insert(data)
 
+
 @bot.command()
 async def restart(ctx):
     if ctx.author.id == config.owner_id:
@@ -35,6 +36,25 @@ async def restart(ctx):
         print(f"Bot restarted requested by: {ctx.author.name} : {ctx.author.id}")
     else:
         await ctx.channel.purge(limit=1)
+
+@bot.event
+async def on_member_join(member):
+    bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
+    bot.db = bot.mongo["development"]
+    welcome = Document(bot.db, "welcome")
+    welcome_filter = {'guild_id': member.guild.id}
+    data = await welcome.find_by_custom(welcome_filter)#
+    if data:
+        channel_id = data.get('channelid')
+        message = data.get('message')
+        if '(member)' in message:
+            newmessage = message.replace('(member)', member.mention)
+        else:
+            newmessage = message
+        channel = bot.get_channel(channel_id)
+        await channel.send(newmessage)
+    else:
+        return
 
 if __name__ == "__main__":
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))

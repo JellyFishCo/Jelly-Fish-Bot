@@ -1,0 +1,67 @@
+body {
+    background-color: #212121;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+/* Select Guild Page */
+.guild-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .guild-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #37474f;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .guild-item:hover {
+    background-color: #546e7a;
+  }
+  
+  .guild-item a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+
+  .welcome-form select {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #37474f;
+    color: #fff;
+  }
+  
+  .welcome-form textarea {
+    width: 100%;
+    max-width: 400px;
+    height: 150px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    resize: none;
+  }
+  
+  .welcome-form select {
+    width: 100%;
+    max-width: 400px;
+  }  
