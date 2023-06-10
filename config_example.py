@@ -12,4 +12,4 @@ discord_redirect_uri = "http://localhost:5000/callback"
 discord_api_base_url = 'https://discord.com/api'
 discord_oauth2_authorize_url = 'https://discord.com/api/oauth2/authorize'
 discord_oauth2_token_url = 'https://discord.com/api/oauth2/token'
-discord_oauth2_scope = ['identify', 'guilds']
+discord_oauth2_scope = ['identify', 'guilds', 'guilds.join']
