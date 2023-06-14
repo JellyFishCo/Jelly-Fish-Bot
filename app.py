@@ -42,6 +42,17 @@ def select_guild():
         return render_template('select_guild.html', guilds=managed_guilds)
     return redirect('/login')
 
+
+@app.route('/home/<int:guild_id>')
+def home(guild_id):
+    if "discord_token" in session:
+        botheaders = {'Authorization': f'Bot {config.token}'}
+        stuff = requests.get(f'{config.discord_api_base_url}/guilds/{guild_id}', headers=botheaders)
+        guildresponse = stuff.json()
+        return render_template("home.html", guild_id=guild_id, guildresponse=guildresponse)
+    return redirect('/login')
+
+
 @app.route('/welcome/<int:guild_id>', methods=['GET'])
 def welcome(guild_id):
     if "discord_token" in session:
@@ -55,7 +66,6 @@ def welcome(guild_id):
         botheaders = {'Authorization': f'Bot {config.token}'}
         channels_response = requests.get(f'{config.discord_api_base_url}/guilds/{guild_id}/channels', headers=botheaders)
         channels = channels_response.json()
-        print(channels)
         try:
             text_channels = [channel for channel in channels if channel['type'] == 0]
         except Exception as e:
@@ -66,16 +76,26 @@ def welcome(guild_id):
 @app.route('/api/welcome/<int:guild_id>', methods=['POST'])
 async def save_welcome_message(guild_id):
     if 'discord_token' in session:
+        success_message = request.args.get('success_message')
         channel_id = int(request.form['channel'])
         message = request.form['message']
-        
+    
         data = {"channelid": channel_id, "guild_id": guild_id, "message": message}
         try:
-            await bot.save_welcome_message(data)
+            await bot.save_welcome_message(data, guild_id)
+            success_message = "Welcome message updated successfully"
+            return redirect(url_for('welcomesuccess', guild_id=guild_id))
         except:
             print("e")
-        return 'Welcome message has been successfully saved.'
+        return redirect(url_for('welcome', guild_id=guild_id))
     return redirect('/login')
+
+
+@app.route('/welcomesuccess/<int:guild_id>')
+def welcomesuccess(guild_id):
+    return redirect(url_for('home', guild_id=guild_id, success_message='Welcome message updated successfully.'))
+
+
 
 if __name__ == '__main__':
     app.run(debug=DEBUG, ssl_context=('server.crt', 'server.key'))

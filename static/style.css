@@ -49,6 +49,13 @@ h1 {
     background-color: #37474f;
     color: #fff;
   }
+
+  #success-message {
+    background-color: #7fbf7f;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+  }
   
   .welcome-form textarea {
     width: 100%;
@@ -65,3 +72,33 @@ h1 {
     width: 100%;
     max-width: 400px;
   }  
+
+  .navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh;
+    background-color: #333;
+  }
+
+  .navbar-entry {
+    padding: 16px;
+    color: #ccc;
+    font-weight: bold;
+    border-bottom: 1px solid #444;
+  }
+
+  .navbar-entry:hover {
+    background-color: #444;
+    cursor: pointer;
+  }
+
+  .navbar-entry.active {
+    background-color: #555;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }

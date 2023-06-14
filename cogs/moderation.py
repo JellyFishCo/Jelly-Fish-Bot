@@ -147,5 +147,18 @@ class Moderation(commands.Cog):
         else:
             print(error)
 
+    @commands.slash_command(name="timeout", description="Times out the specified member for the specified time for the specified reason.")
+    @commands.has_guild_permissions(moderate_members=True)
+    @commands.bot_has_guild_permissions(moderate_members=True)
+    async def timeout(self, ctx, member : discord.SlashCommandOptionType.user, time : discord.Option(int, description="Enter time in seconds", required=True), reason : discord.Option(str, required=False)):
+        await ctx.defer()
+        if reason == None:
+            reason = "Reason Not Specified"
+        embed = discord.Embed(title="Member Timedout", description="I have successfully timed the member out.", color=discord.Color.green())
+        embed.add_field(name="Member Name: ", value=f"{member.mention}", inline=False)
+        embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
+        embed.set_footer(text=f"Requested By: {ctx.author.name}", icon_url=ctx.author.avatar)
+        memberEmbed = discord.Embed(title="You have been timed out!", description=f"You have been timed out in the server {ctx.guild.name}", color=discord.Color.red())
+
 def setup(bot):
     bot.add_cog(Moderation(bot))

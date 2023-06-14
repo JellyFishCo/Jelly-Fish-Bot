@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <title> Home </title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        {% if success_message %}
+        <div id="success-message">
+              <p>{{ success_message }}</p>
+          </div>
+        {% endif %}
+        <div class="navbar">
+          <div class="navbar-entry active"><a href="{{ url_for('home', guild_id=guild_id) }}">Home</a></div>
+          <div class="navbar-entry"><a href="{{ url_for('welcome', guild_id=guild_id) }}">Edit Welcome</a></div>
+          <div class="navbar-entry">Placeholder 2</div>
+        </div>
+        <h1> {{ guildresponse.name }} </h1>
+        <p> Welcome to the dashboard, here you can edit all sorts of things with our bot! <p>
+    </body>
+</html>

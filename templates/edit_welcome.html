@@ -20,5 +20,10 @@
             <input type="submit" value="Update">
         </form>
     </div>
+    <div class="navbar">
+        <div class="navbar-entry"><a href="{{ url_for('home', guild_id=guild_id) }}">Home</a></div>
+        <div class="navbar-entry active"><a href="{{ url_for('welcome', guild_id=guild_id) }}">Edit Welcome</a></div>
+        <div class="navbar-entry">Placeholder 2</div>
+      </div>
 </body>
 </html>

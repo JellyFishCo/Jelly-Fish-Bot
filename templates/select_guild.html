@@ -9,7 +9,7 @@
         <h1>Select a Guild</h1>
         <ul class="guild-list">
             {% for guild in guilds %}
-            <li class="guild-item"><a href="{{ url_for('welcome', guild_id=guild.id) }}">{{ guild.name }}</a></li>
+            <li class="guild-item"><a href="{{ url_for('home', guild_id=guild.id) }}">{{ guild.name }}</a></li>
             {% endfor %}
         </ul>
     </div>

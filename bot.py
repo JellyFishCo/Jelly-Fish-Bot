@@ -21,11 +21,18 @@ async def on_ready():
 def restart_bot():
     os.execv(sys.executable, ['python'] + sys.argv)
 
-async def save_welcome_message(data):
+async def save_welcome_message(data, guild_id):
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
     bot.db = bot.mongo["development"]
     welcome = Document(bot.db, "welcome")
-    await welcome.insert(data)
+    welcome_filter = {"guild_id": guild_id}
+    doesExist = await welcome.find_by_custom(welcome_filter)
+    print(doesExist)
+    if doesExist:
+        await welcome.delete_by_custom(welcome_filter)
+        await welcome.insert(data)
+    else:
+        await welcome.insert(data)
 
 
 @bot.command()
