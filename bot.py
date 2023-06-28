@@ -96,6 +96,7 @@ if __name__ == "__main__":
     bot.kicks = Document(bot.db, "kicks")
     bot.warns = Document(bot.db, "warns")
     bot.suggest = Document(bot.db, "suggest")
+    bot.verify = Document(bot.db, "verify")
     bot.timeouts = Document(bot.db, "timeouts")
     for file in os.listdir('./cogs'):
         if file.endswith(".py") and not file.startswith("_"):
