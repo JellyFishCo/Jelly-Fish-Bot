@@ -159,6 +159,18 @@ class Moderation(commands.Cog):
         embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
         embed.set_footer(text=f"Requested By: {ctx.author.name}", icon_url=ctx.author.avatar)
         memberEmbed = discord.Embed(title="You have been timed out!", description=f"You have been timed out in the server {ctx.guild.name}", color=discord.Color.red())
+        memberEmbed.add_field(name="Responsible Moderator: ", value=f"{ctx.author.mention}", inline=False)
+        memberEmbed.add_field(name="Reason: ", value=f"{reason}", inline=False)
+        memberEmbed.add_field(name="Date: ", value=f"{today.day}-{today.month}-{today.year}", inline=False)
+        duration = datetime.timedelta(seconds=time)
+        await member.timeout_for(duration)
+        await ctx.followup.send(embed=embed)
+        timeout_filter = {"user_id": member.id, "guild_id": ctx.guild.id}
+        timeout_data = {"reason": reason, "timestamp": time.time(), "moderator": ctx.author.id, "time": duration}
+        await self.bot.timeouts.upsert_custom(timeout_filter, timeout_data)
+        await member.send(embed=memberEmbed)
+        
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))
