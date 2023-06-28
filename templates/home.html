@@ -12,7 +12,7 @@
         <div class="navbar">
           <div class="navbar-entry active"><a href="{{ url_for('home', guild_id=guild_id) }}">Home</a></div>
           <div class="navbar-entry"><a href="{{ url_for('welcome', guild_id=guild_id) }}">Edit Welcome</a></div>
-          <div class="navbar-entry">Placeholder 2</div>
+          <div class="navbar-entry"><a href="{{ url_for('verify', guild_id=guild_id) }}">Setup Verification</a></div>
         </div>
         <h1> {{ guildresponse.name }} </h1>
         <p> Welcome to the dashboard, here you can edit all sorts of things with our bot! <p>

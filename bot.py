@@ -35,6 +35,19 @@ async def save_welcome_message(data, guild_id):
         await welcome.insert(data)
 
 
+async def save_verification(data, guild_id):
+    bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
+    bot.db = bot.mongo["development"]
+    verify = Document(bot.db, 'verify')
+    verify_filter = {"guild_id": guild_id}
+    doesExist = await verify.find_by_custom(verify_filter)
+    print(doesExist)
+    if doesExist:
+        await verify.delete_by_custom(verify_filter)
+        await verify.insert(data)
+    else:
+        await verify.insert(data)
+
 @bot.command()
 async def restart(ctx):
     if ctx.author.id == config.owner_id:
@@ -49,8 +62,10 @@ async def on_member_join(member):
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
     bot.db = bot.mongo["development"]
     welcome = Document(bot.db, "welcome")
+    verify = Document(bot.db, "verify")
     welcome_filter = {'guild_id': member.guild.id}
-    data = await welcome.find_by_custom(welcome_filter)#
+    verify_filter = {'guild_id': member.guild.id}
+    data = await welcome.find_by_custom(welcome_filter)
     if data:
         channel_id = data.get('channelid')
         message = data.get('message')
@@ -60,6 +75,16 @@ async def on_member_join(member):
             newmessage = message
         channel = bot.get_channel(channel_id)
         await channel.send(newmessage)
+    verify_data = await verify.find_by_custom(verify_filter)
+    if verify_data:
+        verify_channel_id = verify_data.get('channelid')
+        verify_message = verify_data.get('message')
+        if '(member)' in verify_message:
+            verify_newmessage = verify_message.replace('(member)', member.mention)
+        else:
+            verify_newmessage = verify_message
+        verify_channel = bot.get_channel(verify_channel_id)
+        await verify_channel.send(verify_newmessage)
     else:
         return
 

@@ -98,7 +98,7 @@ class Moderation(commands.Cog):
         kick_data = {"reason": reason, "timestamp": time.time(), "moderator": ctx.author.id}
 
         await self.bot.kicks.upsert_custom(kick_filter, kick_data)
-        await ctx.followup.send(Embed=embed)
+        await ctx.followup.send(embed=embed)
         try:
             await member.send(embed=memberEmbed)
             await member.kick()

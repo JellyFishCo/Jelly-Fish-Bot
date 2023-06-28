@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Setup Verification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Setup Verification</h1>
+        <p>Put (member) anywhere in the message for the bot to ping the member</p>
+        <form class="verify-form" method="POST" action="{{ url_for('save_verification', guild_id=guild_id) }}">
+            <label for="message">Message you want to be displayed in the channel you select.</label><br>
+            <textarea name="message" id="message" rows="5" cols="50"></textarea><br>
+            <label for="channel">Role to be given when they do /verify:</label><br>
+            <select name="role" id="role">
+                {% for role in roles %}
+                <option value="{{ role.id }}">{{ role.name }}</option>
+                {% endfor %}
+            </select><br>
+            <label for="channel">Channel where the command should be ran in.</label><br>
+            <select name="channel" id="channel">
+                {% for channel in channels %}
+                <option value="{{ channel.id }}">{{ channel.name }}</option>
+                {% endfor %}
+            </select><br>
+            <input type="submit" value="Update">
+        </form>
+    </div>
+    <div class="navbar">
+        <div class="navbar-entry"><a href="{{ url_for('home', guild_id=guild_id) }}">Home</a></div>
+        <div class="navbar-entry"><a href="{{ url_for('welcome', guild_id=guild_id) }}">Edit Welcome</a></div>
+        <div class="navbar-entry active"><a href="{{ url_for('verify', guild_id=guild_id) }}">Setup Verification</a></div>
+      </div>
+</body>
+</html>

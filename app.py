@@ -73,6 +73,29 @@ def welcome(guild_id):
         return render_template('edit_welcome.html', guild_id=guild_id, channels=text_channels)
     return redirect('/login')
 
+@app.route('/verify/<int:guild_id>', methods=['GET'])
+def verify(guild_id):
+    if "discord_token" in session:
+        headers = {
+            'Authorization': f'Bearer {session["discord_token"]["access_token"]}'
+        }
+        guilds_response = requests.get(f'{config.discord_api_base_url}/users/@me/guilds', headers=headers)
+        guilds_data = guilds_response.json()
+        guilds = [guild for guild in guilds_data if (guild.get('permissions', 0) & 32) == 32]
+        guild = guilds[0]
+        botheaders = {'Authorization': f'Bot {config.token}'}
+        roles_response = requests.get(f'{config.discord_api_base_url}/guilds/{guild_id}/roles', headers=botheaders)
+        roles = roles_response.json()
+        channels_response = requests.get(f'{config.discord_api_base_url}/guilds/{guild_id}/channels', headers=botheaders)
+        channels = channels_response.json()
+        try:
+            text_channels = [channel for channel in channels if channel['type'] == 0]
+            actual_roles = [role for role in roles if role['name'] != "@everyone"]
+        except Exception as e:
+            return f"The bot is not in your discord server."
+        return render_template('verify_setup.html', guild_id=guild_id, roles=actual_roles, channels=text_channels)
+    return redirect('/login')
+
 @app.route('/api/welcome/<int:guild_id>', methods=['POST'])
 async def save_welcome_message(guild_id):
     if 'discord_token' in session:
@@ -90,11 +113,32 @@ async def save_welcome_message(guild_id):
         return redirect(url_for('welcome', guild_id=guild_id))
     return redirect('/login')
 
+@app.route('/api/verify/<int:guild_id>', methods=['POST'])
+async def save_verification(guild_id):
+    if 'discord_token' in session:
+        success_message = request.args.get('success_message')
+        channel_id = int(request.form['channel'])
+        role_id = int(request.form['role'])
+        message = request.form['message']
+    
+        data = {"channelid": channel_id, "role_id": role_id, "guild_id": guild_id, "message": message}
+        try:
+            await bot.save_verification(data, guild_id)
+            success_message = "Verification has been setup successfully"
+            return redirect(url_for('verifysuccess', guild_id=guild_id))
+        except Exception as e:
+            print(e)
+        return redirect(url_for('verify', guild_id=guild_id))
+    return redirect('/login')
+
 
 @app.route('/welcomesuccess/<int:guild_id>')
 def welcomesuccess(guild_id):
     return redirect(url_for('home', guild_id=guild_id, success_message='Welcome message updated successfully.'))
 
+@app.route('/verifysuccess/<int:guild_id>')
+def verifysuccess(guild_id):
+    return redirect(url_for('home', guild_id=guild_id, success_message='Verification has been setup successfully.'))
 
 
 if __name__ == '__main__':

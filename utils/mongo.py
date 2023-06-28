@@ -66,9 +66,9 @@ class Document:
     async def upsert_custom(self, filter_dict, update_data, option="set", *args, **kwargs):
         await self.update_by_custom(filter_dict, update_data, option, upsert=True, *args, **kwargs)
 
-    async def upsert_by_custom(self, filter_dict, update_data, option="set", *args, **kwargs):
+    async def update_by_custom(self, filter_dict, update_data, option="set", *args, **kwargs):
         self.__ensure_dict(filter_dict)
-        self.__ensure_Dict(update_data)
+        self.__ensure_dict(update_data)
 
         if not bool(await self.find_by_custom(filter_dict)):
             return await self.insert({**filter_dict, **update_data})

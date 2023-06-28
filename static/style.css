@@ -102,3 +102,32 @@ h1 {
     color: inherit;
     text-decoration: none;
   }
+
+
+  .verify-form select {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #37474f;
+    color: #fff;
+  }
+
+  
+  .verify-form textarea {
+    width: 100%;
+    max-width: 400px;
+    height: 150px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    resize: none;
+  }
+  
+  .verify-form select {
+    width: 100%;
+    max-width: 400px;
+  }  
