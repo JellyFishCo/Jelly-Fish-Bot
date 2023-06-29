@@ -15,7 +15,7 @@ class Server(commands.Cog):
             role = discord.utils.get(ctx.guild.roles, id=role_id)
             await ctx.author.add_roles(role)
             await ctx.author.send(f"You have been verified in {ctx.guild.name}.")
-            await ctx.respond("Task completed.", delete_after=3)
+            await ctx.respond("Task completed.", delete_after=2)
 
 
 def setup(bot):
