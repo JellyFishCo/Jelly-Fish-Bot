@@ -23,7 +23,7 @@ def restart_bot():
 
 async def save_welcome_message(data, guild_id):
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
-    bot.db = bot.mongo["development"]
+    bot.db = bot.mongo["production"]
     welcome = Document(bot.db, "welcome")
     welcome_filter = {"guild_id": guild_id}
     doesExist = await welcome.find_by_custom(welcome_filter)
@@ -37,7 +37,7 @@ async def save_welcome_message(data, guild_id):
 
 async def save_verification(data, guild_id):
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
-    bot.db = bot.mongo["development"]
+    bot.db = bot.mongo["production"]
     verify = Document(bot.db, 'verify')
     verify_filter = {"guild_id": guild_id}
     doesExist = await verify.find_by_custom(verify_filter)
@@ -72,7 +72,7 @@ async def restart(ctx):
 @bot.event
 async def on_member_join(member):
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
-    bot.db = bot.mongo["development"]
+    bot.db = bot.mongo["production"]
     welcome = Document(bot.db, "welcome")
     verify = Document(bot.db, "verify")
     welcome_filter = {'guild_id': member.guild.id}
@@ -102,14 +102,15 @@ async def on_member_join(member):
 
 if __name__ == "__main__":
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
-    # TODO: This text field should change from "development" to "production" when released.
-    bot.db = bot.mongo["development"]
+    # TODO: This text field should change from "production" to "production" when released.
+    bot.db = bot.mongo["production"]
     bot.bans = Document(bot.db, "bans")
     bot.kicks = Document(bot.db, "kicks")
     bot.warns = Document(bot.db, "warns")
     bot.suggest = Document(bot.db, "suggest")
     bot.verify = Document(bot.db, "verify")
     bot.timeouts = Document(bot.db, "timeouts")
+    bot.welcome = Document(bot.db, "welcome")
     for file in os.listdir('./cogs'):
         if file.endswith(".py") and not file.startswith("_"):
             bot.load_extension(f"cogs.{file[:-3]}")
