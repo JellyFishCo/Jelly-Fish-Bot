@@ -46,7 +46,7 @@ def select_guild():
 @app.route('/home/<int:guild_id>')
 def home(guild_id):
     if "discord_token" in session:
-        botheaders = {'Authorization': f'Bot {config.token}'}
+        botheaders = {'Authorization': f'Bot {config.dev_token}'}
         stuff = requests.get(f'{config.discord_api_base_url}/guilds/{guild_id}', headers=botheaders)
         guildresponse = stuff.json()
         return render_template("home.html", guild_id=guild_id, guildresponse=guildresponse)
@@ -63,7 +63,7 @@ def welcome(guild_id):
         guilds_data = guilds_response.json()
         guilds = [guild for guild in guilds_data if (guild.get('permissions', 0) & 32) == 32]
         guild = guilds[0]
-        botheaders = {'Authorization': f'Bot {config.token}'}
+        botheaders = {'Authorization': f'Bot {config.dev_token}'}
         channels_response = requests.get(f'{config.discord_api_base_url}/guilds/{guild_id}/channels', headers=botheaders)
         channels = channels_response.json()
         try:
@@ -83,7 +83,7 @@ def verify(guild_id):
         guilds_data = guilds_response.json()
         guilds = [guild for guild in guilds_data if (guild.get('permissions', 0) & 32) == 32]
         guild = guilds[0]
-        botheaders = {'Authorization': f'Bot {config.token}'}
+        botheaders = {'Authorization': f'Bot {config.dev_token}'}
         roles_response = requests.get(f'{config.discord_api_base_url}/guilds/{guild_id}/roles', headers=botheaders)
         roles = roles_response.json()
         channels_response = requests.get(f'{config.discord_api_base_url}/guilds/{guild_id}/channels', headers=botheaders)

@@ -3,3 +3,5 @@ discord-ext-buttons
 requests
 flask
 requests-oauthlib
+motor
+discord-games @ git+https://github.com/Tom-the-Bomb/Discord-Games.git
