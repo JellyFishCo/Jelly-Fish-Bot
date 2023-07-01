@@ -2,9 +2,25 @@ import discord
 from discord.ext import commands
 
 
+class VerifyView(discord.ui.View):
+    @discord.ui.button(label="Verify", style=discord.ButtonStyle.green)
+    async def button_callback(self, button, interaction: discord.Interaction):
+        for guild in self.bot.guilds:
+            verify_filter = {"guild_id": guild.id}
+            data = await self.verify.find_by_custom(verify_filter)
+            if data:
+                role_id = data.get('role_id')
+                role = discord.utils.get(guild.roles, id=role_id)
+                await interaction.user.add_roles(role)
+                await interaction.response.send_message("Verification Complete! :white_check_mark:", ephemeral=True)
+            else:
+                print("No data found.")
+
+
 class Server(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
 
     @commands.slash_command(name="setupverify", description="Sets up the verification command.")
     @commands.has_guild_permissions(manage_guild=True)
@@ -18,6 +34,12 @@ class Server(commands.Cog):
             await self.bot.verify.insert(data)
         else:
             await self.bot.verify.insert(data)
+        channel_id = data.get('channelid')
+        channel = self.bot.get_channel(channel_id)
+        message = data.get('message')
+        embed = discord.Embed(title="Server Verification", description=message, color=discord.Color.blue())
+        await channel.purge(limit=1)
+        await channel.send(embed=embed, view=VerifyView())
         await ctx.followup.send("Verification has been setup! :heavy_check_mark:")
 
     @commands.slash_command(name="setupwelcome", description="Sets up welcome messages.")
