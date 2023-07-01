@@ -48,17 +48,6 @@ async def save_verification(data, guild_id):
     else:
         await verify.insert(data)
 
-@bot.slash_command(name="botstatus", description="Sets the bots status.")
-async def botstatus(ctx, status: str):
-    if ctx.author.id == config.owner_id:
-        embed = discord.Embed(title="Bot Status", description="The current status of the bot.", color=discord.Color.blue())
-        embed.add_field(name="Current Status: ", value=f"{status}", inline=True)
-        channel = bot.get_channel(1110624933052162109)
-        await channel.purge(limit=1)
-        await channel.send(embed=embed)
-        await ctx.respond("Task Completed", delete_after=2)
-    else:
-        await ctx.respond("You are not the owner of the bot!")
 
 @bot.command()
 async def restart(ctx):
