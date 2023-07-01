@@ -21,7 +21,7 @@ class BotCommands(commands.Cog):
     @commands.slash_command(name="botupdate", description="Adds a bot update to the bot update channel.")
     async def botupdate(self, ctx, title: str, description: str):
         if ctx.author.id == config.owner_id:
-            embed = discord.Embed(title=title, description=description, color=discord.Color.green())
+            embed = discord.Embed(title=title, description=description, color=discord.Color.blue())
             channel = self.bot.get_channel(1110624933052162108)
             await channel.send(embed=embed)
             await ctx.respond("Task Completed", delete_after=2)
