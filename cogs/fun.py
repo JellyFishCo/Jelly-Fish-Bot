@@ -5,7 +5,7 @@ from discord_games.hangman import Hangman
 from discord_games.tictactoe import Tictactoe
 
 class Games(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot : commands.Bot):
         self.bot = bot
 
     @commands.slash_command(name="rps", description="Starts up a game of Rock Paper Scissors.")

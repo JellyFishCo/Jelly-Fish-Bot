@@ -7,7 +7,7 @@ import datetime
 from utils.util import Pag
 import asyncio
 class Moderation(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot : commands.Bot):
         self.bot = bot
     
     @commands.slash_command(name="ban", description="Bans the specified user for the specified reason.")

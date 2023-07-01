@@ -18,7 +18,7 @@ class VerifyView(discord.ui.View):
 
 
 class Server(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot : commands.Bot):
         self.bot = bot
 
 
