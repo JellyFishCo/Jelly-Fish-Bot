@@ -7,7 +7,6 @@
 <body>
     <div class="container">
         <h1>Setup Verification</h1>
-        <p>Put (member) anywhere in the message for the bot to ping the member</p>
         <form class="verify-form" method="POST" action="{{ url_for('save_verification', guild_id=guild_id) }}">
             <label for="message">Message you want to be displayed in the channel you select.</label><br>
             <textarea name="message" id="message" rows="5" cols="50"></textarea><br>
