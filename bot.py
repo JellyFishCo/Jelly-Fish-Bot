@@ -9,6 +9,24 @@ import asyncio
 
 bot = commands.Bot(command_prefix="!", disableEveryone=False, intents=discord.Intents.all(), owner_id=config.owner_id)
 
+class VerifyView(discord.ui.View):
+    @discord.ui.button(label="Verify", style=discord.ButtonStyle.green)
+    async def button_callback(self, button, interaction: discord.Interaction):
+        bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
+        bot.db = bot.mongo["development"]
+        verify = Document(bot.db, "verify")
+        for guild in bot.guilds:
+            verify_filter = {"guild_id": guild.id}
+            data = await verify.find_by_custom(verify_filter)
+            if data:
+                print("placeholder")
+                role_id = data.get('role_id')
+                role = discord.utils.get(guild.roles, id=role_id)
+                await interaction.user.add_roles(role)
+                await interaction.response.send_message("Verification Complete! :white_check_mark:", ephemeral=True)
+            else:
+                print("No data found.")
+
 @bot.event
 async def on_ready():
     print(f"-----\nLogged in as: {bot.user.name} : {bot.user.id}\n-----\n")
@@ -16,6 +34,22 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="me getting developed"))
 
     print("Initilized Database\n-----")
+
+    bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
+    bot.db = bot.mongo["development"]
+    verify = Document(bot.db, "verify")
+    for guild in bot.guilds:
+        verify_filter = {"guild_id": guild.id}
+        data = await verify.find_by_custom(verify_filter)
+        if data:
+            channel_id = data.get('channelid')
+            channel = bot.get_channel(channel_id)
+            message = data.get('message')
+            embed = discord.Embed(title="Server Verification", description=message, color=discord.Color.blue())
+            await channel.purge(limit=1)
+            await channel.send(embed=embed, view=VerifyView())
+        else:
+            print("No data found.")
 
 
 def restart_bot():
@@ -76,18 +110,6 @@ async def on_member_join(member):
             newmessage = message
         channel = bot.get_channel(channel_id)
         await channel.send(newmessage)
-    verify_data = await verify.find_by_custom(verify_filter)
-    if verify_data:
-        verify_channel_id = verify_data.get('channelid')
-        verify_message = verify_data.get('message')
-        if '(member)' in verify_message:
-            verify_newmessage = verify_message.replace('(member)', member.mention)
-        else:
-            verify_newmessage = verify_message
-        verify_channel = bot.get_channel(verify_channel_id)
-        await verify_channel.send(verify_newmessage)
-    else:
-        return
 
 if __name__ == "__main__":
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
