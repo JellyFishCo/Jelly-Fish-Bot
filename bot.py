@@ -98,9 +98,8 @@ async def on_member_join(member):
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
     bot.db = bot.mongo["development"]
     welcome = Document(bot.db, "welcome")
-    verify = Document(bot.db, "verify")
     welcome_filter = {'guild_id': member.guild.id}
-    verify_filter = {'guild_id': member.guild.id}
+    print(member.guild.id)
     data = await welcome.find_by_custom(welcome_filter)
     if data:
         channel_id = data.get('channelid')

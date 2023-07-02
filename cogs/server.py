@@ -47,7 +47,7 @@ class Server(commands.Cog):
     async def setupwelcome(self, ctx, channel: discord.SlashCommandOptionType.channel, message: discord.Option(str, required=True, description="The message you want to be sent into the channel. Put (member) anywhere for it to ping the member.")):
         await ctx.defer()
         welcome_filter = {"guild_id": ctx.guild.id}
-        data = {"channelid": channel.id, "message": message}
+        data = {"channelid": channel.id, "guild_id": ctx.guild.id, "message": message}
         doesExist = await self.bot.welcome.find_by_custom(welcome_filter)
         if doesExist:
             await self.bot.welcome.delete_by_custom(welcome_filter)
