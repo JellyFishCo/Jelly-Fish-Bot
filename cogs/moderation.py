@@ -188,6 +188,16 @@ class Moderation(commands.Cog):
         await member.send(embed=memberEmbed)
         
 
+    @commands.slash_command(name="nickname", description="Changes the nickname of the specified person.")
+    @commands.has_guild_permissions(manage_nicknames=True)
+    async def nickname(self, ctx, member: discord.Option(discord.SlashCommandOptionType.user, required=True, description="The person thats nickname is going to be changed."), nickname: discord.Option(str, required=False, description="Their new nickname. Leave it blank to return their name back to default.")):
+        await ctx.defer()
+        if nickname == None:
+            nickname = member.username
+        embed = discord.Embed(title="Nickname Changed", description=f"I have changed their nickname to {nickname}", color=discord.Color.blue())
+        await member.edit(nick=nickname)
+        await ctx.followup.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Moderation(bot))

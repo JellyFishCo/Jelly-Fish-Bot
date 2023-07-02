@@ -28,5 +28,14 @@ class BotCommands(commands.Cog):
         else:
             await ctx.respond("You are not the owner of the bot!")
 
+    @commands.slash_command(name="botstats", description="Shows the stats of the bot.")
+    async def botstats(self, ctx):
+        await ctx.defer()
+        numberofguilds = len(self.bot.guilds)
+        numberofusers = len(self.bot.users)
+        embed = discord.Embed(title="Bot Stats", description="Here are my current stats.", color=discord.Color.blue())
+        embed.add_field(name="Number Of Guilds: ", value=numberofguilds, inline=False)
+        embed.add_field(name="Number Of Users", value=numberofusers, inline=False)
+        await ctx.followup.send(embed=embed)
 def setup(bot: commands.Bot):
     bot.add_cog(BotCommands(bot))
