@@ -8,7 +8,12 @@ from utils.util import Pag
 import asyncio
 import string
 import random
-from ..utils.generate_punishment_id import punishment_id
+import string
+def punishment_id():
+    letters = string.ascii_uppercase
+    stringrandom = ''.join(random.choice(letters) for i in range(6))
+    punishment_id = 'JF-' + stringrandom
+    return punishment_id
 class Moderation(commands.Cog):
     def __init__(self, bot : commands.Bot):
         self.bot = bot

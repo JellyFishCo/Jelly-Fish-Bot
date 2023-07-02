@@ -39,7 +39,7 @@ class Server(commands.Cog):
         message = data.get('message')
         embed = discord.Embed(title="Server Verification", description=message, color=discord.Color.blue())
         await channel.purge(limit=1)
-        await channel.send(embed=embed, view=VerifyView())
+        await channel.send(embed=embed, view=VerifyView(timeout=None))
         await ctx.followup.send("Verification has been setup! :white_check_mark:")
 
     @commands.slash_command(name="setupwelcome", description="Sets up welcome messages.")

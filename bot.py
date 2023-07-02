@@ -48,7 +48,7 @@ async def on_ready():
             message = data.get('message')
             embed = discord.Embed(title="Server Verification", description=message, color=discord.Color.blue())
             #await channel.purge(limit=1)
-            #await channel.send(embed=embed, view=VerifyView())
+            #await channel.send(embed=embed, view=VerifyView(timeout=None))
         else:
             print("No data found.")
 
@@ -124,6 +124,6 @@ if __name__ == "__main__":
     bot.timeouts = Document(bot.db, "timeouts")
     bot.welcome = Document(bot.db, "welcome")
     for file in os.listdir('./cogs'):
-        if file.endswith(".py") and not file.startswith("_") and not file.startswith("games"):
+        if file.endswith(".py") and not file.startswith("_") :
             bot.load_extension(f"cogs.{file[:-3]}")
     bot.run(config.dev_token)
