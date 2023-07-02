@@ -111,9 +111,25 @@ async def on_member_join(member):
         channel = bot.get_channel(channel_id)
         await channel.send(newmessage)
 
+@bot.event
+async def on_message_delete(message):
+    if len(message.mentions) == 0:
+        return
+    else:
+        ghostping = discord.Embed(title=f'GhostPing', color=discord.Color.blue(), timestamp=message.created_at)
+        ghostping.add_field(name='**Name:**', value=f'{message.author.mention}')
+        ghostping.add_field(name='**Message:**', value=f'{message.content}')
+        ghostping.set_thumbnail(
+            url='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXtzZMvleC8FG1ExS4PyhFUm9kS4BGVlsTYw&usqp=CAU')
+        try:
+            await message.channel.send(embed=ghostping)
+        except discord.Forbidden:
+            try:
+                await message.author.send(embed=ghostping)
+            except discord.Forbidden:
+                return
 if __name__ == "__main__":
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
-    # TODO: This text field should change from "development" to "development" when released.
     bot.db = bot.mongo["development"]
     bot.bans = Document(bot.db, "bans")
     bot.kicks = Document(bot.db, "kicks")
