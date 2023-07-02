@@ -6,6 +6,8 @@ import os
 import config
 import sys
 import asyncio
+import string
+import random
 
 bot = commands.Bot(command_prefix="!", disableEveryone=False, intents=discord.Intents.all(), owner_id=config.owner_id)
 
@@ -34,7 +36,6 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="me getting developed"))
 
     print("Initilized Database\n-----")
-
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
     bot.db = bot.mongo["development"]
     verify = Document(bot.db, "verify")
@@ -46,8 +47,8 @@ async def on_ready():
             channel = bot.get_channel(channel_id)
             message = data.get('message')
             embed = discord.Embed(title="Server Verification", description=message, color=discord.Color.blue())
-            await channel.purge(limit=1)
-            await channel.send(embed=embed, view=VerifyView())
+            #await channel.purge(limit=1)
+            #await channel.send(embed=embed, view=VerifyView())
         else:
             print("No data found.")
 

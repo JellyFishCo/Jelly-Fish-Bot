@@ -40,7 +40,7 @@ class Server(commands.Cog):
         embed = discord.Embed(title="Server Verification", description=message, color=discord.Color.blue())
         await channel.purge(limit=1)
         await channel.send(embed=embed, view=VerifyView())
-        await ctx.followup.send("Verification has been setup! :heavy_check_mark:")
+        await ctx.followup.send("Verification has been setup! :white_check_mark:")
 
     @commands.slash_command(name="setupwelcome", description="Sets up welcome messages.")
     @commands.has_guild_permissions(manage_guild=True)
@@ -54,7 +54,7 @@ class Server(commands.Cog):
             await self.bot.welcome.insert(data)
         else:
             await self.bot.welcome.insert(data)
-        await ctx.followup.send("Welcome messages has been setup! :heavy_check_mark:")
+        await ctx.followup.send("Welcome messages has been setup! :white_check_mark:")
 
 def setup(bot):
     bot.add_cog(Server(bot))

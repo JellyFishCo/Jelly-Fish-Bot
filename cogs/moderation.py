@@ -6,6 +6,9 @@ today = date.today()
 import datetime
 from utils.util import Pag
 import asyncio
+import string
+import random
+from ..utils.generate_punishment_id import punishment_id
 class Moderation(commands.Cog):
     def __init__(self, bot : commands.Bot):
         self.bot = bot
@@ -17,15 +20,18 @@ class Moderation(commands.Cog):
         await ctx.defer()
         if reason == None:
             reason = "No Reason Specified"
+        punishment_id = punishment_id()
         embed = discord.Embed(title="Member Banned", description="I have successfully banned the specified member", color=discord.Color.green())
         embed.add_field(name="Member Name: ", value=f"{member.mention}", inline=False)
         embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
+        embed.add_field(name="Punishment ID: ", value=punishment_id, inline=False)
         embed.set_footer(text=f"Requested By: {ctx.author.name}", icon_url=ctx.author.avatar)
         memberEmbed = discord.Embed(title="You have been banned", description=f"You have been banned from the server {ctx.guild.name}", color=discord.Color.red())
         memberEmbed.add_field(name="Responsible Moderator: ", value=f"{ctx.author.mention}", inline=False)
         memberEmbed.add_field(name="Reason: ", value=f"{reason}", inline=False)
         memberEmbed.add_field(name="Date: ", value=f"{today.day}-{today.month}-{today.year}", inline=False)
-        ban_data = {"reason": reason, "timestamp": time.time(), "moderator": ctx.author.id, "guild_id": ctx.guild.id, "user_id": member.id}
+        memberEmbed.add_field(name="Punishment ID:", value=punishment_id, inline=False)
+        ban_data = {"reason": reason, "timestamp": time.time(), "moderator": ctx.author.id, "guild_id": ctx.guild.id, "user_id": member.id, "punishment_id": punishment_id}
         await self.bot.bans.insert(ban_data)
         await ctx.followup.send(embed=embed)
         try:
@@ -86,14 +92,17 @@ class Moderation(commands.Cog):
         await ctx.defer()
         if reason == None:
             reason = "No Reason Specified"
+        punishment_id = punishment_id()
         embed = discord.Embed(title="Member Kicked", description="I have successfully kicked the specified member!", color=discord.Color.green())
         embed.add_field(name="Member Name: ", value=f"{member.mention}", inline=False)
         embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
+        embed.add_field(name="Punishment ID: ", value=punishment_id, inline=False)
         embed.set_footer(text=f"Requested By: {ctx.author.name}", icon_url=ctx.author.avatar)
         memberEmbed = discord.Embed(title="You have been kicked", description=f"You have been kicked from the server {ctx.guild.name}", color=discord.Color.red())
         memberEmbed.add_field(name="Responsible Moderator: ", value=f"{ctx.author.mention}", inline=False)
         memberEmbed.add_field(name="Reason: ", value=f"{reason}", inline=False)
         memberEmbed.add_field(name="Date: ", value=f"{today.day}-{today.month}-{today.year}")
+        memberEmbed.add_field(name="Punishment ID:", value=punishment_id, inline=False)
         kick_filter = {"user_id": member.id, "guild_id": ctx.guild.id}
         kick_data = {"reason": reason, "timestamp": time.time(), "moderator": ctx.author.id}
 
@@ -154,14 +163,17 @@ class Moderation(commands.Cog):
         await ctx.defer()
         if reason == None:
             reason = "Reason Not Specified"
+        punishment_id = punishment_id()
         embed = discord.Embed(title="Member Timedout", description="I have successfully timed the member out.", color=discord.Color.green())
         embed.add_field(name="Member Name: ", value=f"{member.mention}", inline=False)
         embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
+        embed.add_field(name="Punishment ID: ", value=punishment_id, inline=False)
         embed.set_footer(text=f"Requested By: {ctx.author.name}", icon_url=ctx.author.avatar)
         memberEmbed = discord.Embed(title="You have been timed out!", description=f"You have been timed out in the server {ctx.guild.name}", color=discord.Color.red())
         memberEmbed.add_field(name="Responsible Moderator: ", value=f"{ctx.author.mention}", inline=False)
         memberEmbed.add_field(name="Reason: ", value=f"{reason}", inline=False)
         memberEmbed.add_field(name="Date: ", value=f"{today.day}-{today.month}-{today.year}", inline=False)
+        memberEmbed.add_field(name="Punishment ID:", value=punishment_id, inline=False)
         duration = datetime.timedelta(seconds=time)
         await member.timeout_for(duration)
         await ctx.followup.send(embed=embed)
