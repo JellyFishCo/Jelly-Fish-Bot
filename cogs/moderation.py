@@ -9,11 +9,6 @@ import asyncio
 import string
 import random
 import string
-def punishment_id():
-    letters = string.ascii_uppercase
-    stringrandom = ''.join(random.choice(letters) for i in range(6))
-    punishment_id = 'JF-' + stringrandom
-    return punishment_id
 class Moderation(commands.Cog):
     def __init__(self, bot : commands.Bot):
         self.bot = bot
@@ -25,7 +20,9 @@ class Moderation(commands.Cog):
         await ctx.defer()
         if reason == None:
             reason = "No Reason Specified"
-        punishment_id = punishment_id()
+        letters = string.ascii_uppercase
+        stringrandom = ''.join(random.choice(letters) for i in range(6))
+        punishment_id = 'JF-' + stringrandom
         embed = discord.Embed(title="Member Banned", description="I have successfully banned the specified member", color=discord.Color.green())
         embed.add_field(name="Member Name: ", value=f"{member.mention}", inline=False)
         embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
@@ -97,7 +94,9 @@ class Moderation(commands.Cog):
         await ctx.defer()
         if reason == None:
             reason = "No Reason Specified"
-        punishment_id = punishment_id()
+        letters = string.ascii_uppercase
+        stringrandom = ''.join(random.choice(letters) for i in range(6))
+        punishment_id = 'JF-' + stringrandom
         embed = discord.Embed(title="Member Kicked", description="I have successfully kicked the specified member!", color=discord.Color.green())
         embed.add_field(name="Member Name: ", value=f"{member.mention}", inline=False)
         embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
@@ -168,7 +167,9 @@ class Moderation(commands.Cog):
         await ctx.defer()
         if reason == None:
             reason = "Reason Not Specified"
-        punishment_id = punishment_id()
+        letters = string.ascii_uppercase
+        stringrandom = ''.join(random.choice(letters) for i in range(6))
+        punishment_id = 'JF-' + stringrandom
         embed = discord.Embed(title="Member Timedout", description="I have successfully timed the member out.", color=discord.Color.green())
         embed.add_field(name="Member Name: ", value=f"{member.mention}", inline=False)
         embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
