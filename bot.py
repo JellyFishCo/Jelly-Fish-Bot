@@ -131,12 +131,9 @@ async def on_message_delete(message):
 if __name__ == "__main__":
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(config.mongo_url))
     bot.db = bot.mongo["development"]
-    bot.bans = Document(bot.db, "bans")
-    bot.kicks = Document(bot.db, "kicks")
-    bot.warns = Document(bot.db, "warns")
+    bot.punishments = Document(bot.db, "punishments")
     bot.suggest = Document(bot.db, "suggest")
     bot.verify = Document(bot.db, "verify")
-    bot.timeouts = Document(bot.db, "timeouts")
     bot.welcome = Document(bot.db, "welcome")
     for file in os.listdir('./cogs'):
         if file.endswith(".py") and not file.startswith("_") :

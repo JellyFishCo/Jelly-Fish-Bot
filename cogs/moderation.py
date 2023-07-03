@@ -33,8 +33,8 @@ class Moderation(commands.Cog):
         memberEmbed.add_field(name="Reason: ", value=f"{reason}", inline=False)
         memberEmbed.add_field(name="Date: ", value=f"{today.day}-{today.month}-{today.year}", inline=False)
         memberEmbed.add_field(name="Punishment ID:", value=punishment_id, inline=False)
-        ban_data = {"reason": reason, "timestamp": time.time(), "moderator": ctx.author.id, "guild_id": ctx.guild.id, "user_id": member.id, "punishment_id": punishment_id}
-        await self.bot.bans.insert(ban_data)
+        ban_data = {"type": "ban", "reason": reason, "timestamp": time.time(), "moderator": ctx.author.id, "guild_id": ctx.guild.id, "user_id": member.id, "punishment_id": punishment_id}
+        await self.bot.punishments.insert(ban_data)
         await ctx.followup.send(embed=embed)
         try:
             await member.send(embed=memberEmbed)
@@ -108,9 +108,9 @@ class Moderation(commands.Cog):
         memberEmbed.add_field(name="Date: ", value=f"{today.day}-{today.month}-{today.year}")
         memberEmbed.add_field(name="Punishment ID:", value=punishment_id, inline=False)
         kick_filter = {"user_id": member.id, "guild_id": ctx.guild.id}
-        kick_data = {"reason": reason, "timestamp": time.time(), "moderator": ctx.author.id}
+        kick_data = {"type": "kick", "reason": reason, "timestamp": time.time(), "moderator": ctx.author.id, "punishment_id": punishment_id}
 
-        await self.bot.kicks.upsert_custom(kick_filter, kick_data)
+        await self.bot.punishments.upsert_custom(kick_filter, kick_data)
         await ctx.followup.send(embed=embed)
         try:
             await member.send(embed=memberEmbed)
@@ -184,8 +184,8 @@ class Moderation(commands.Cog):
         await member.timeout_for(duration)
         await ctx.followup.send(embed=embed)
         timeout_filter = {"user_id": member.id, "guild_id": ctx.guild.id}
-        timeout_data = {"reason": reason, "timestamp": time.time(), "moderator": ctx.author.id, "time": duration}
-        await self.bot.timeouts.upsert_custom(timeout_filter, timeout_data)
+        timeout_data = {"type": "timeout", "reason": reason, "timestamp": time.time(), "moderator": ctx.author.id, "time": duration, "punishment_id": punishment_id}
+        await self.bot.punishments.upsert_custom(timeout_filter, timeout_data)
         await member.send(embed=memberEmbed)
         
 
@@ -198,6 +198,30 @@ class Moderation(commands.Cog):
         embed = discord.Embed(title="Nickname Changed", description=f"I have changed their nickname to {nickname}", color=discord.Color.blue())
         await member.edit(nick=nickname)
         await ctx.followup.send(embed=embed)
+
+    @commands.slash_command(name="punishment-lookup", description="Look up a users punishment using the given punishment ID.")
+    @commands.has_guild_permissions(moderate_members=True)
+    async def punishment_lookup(self, ctx, punishment_id: discord.Option(str, required=True, description="Enter the punishment ID, it should start with JF and random 6 letter string.")):
+        await ctx.defer()
+        punishment_filter = {"punishment_id": punishment_id}
+        data = await self.bot.punishments.find_by_custom(punishment_filter)
+        if data:
+            reason = data.get('reason')
+            type = data.get('type')
+            moderator = data.get('moderator')
+            timestamp = data.get('timestamp')
+            embed = discord.Embed(title="Punishment Lookup", description=f"Here is the following details for punishment ID {punishment_id}", color=discord.Color.blue())
+            embed.add_field(name="Punishment Type: ", value=f"{type}", inline=False)
+            embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
+            embed.add_field(name="Moderator: ", value=f"{moderator}", inline=False)
+            date = datetime.datetime.fromtimestamp(timestamp)
+            embed.add_field(name="Date: ", value=f"{date}", inline=False)
+            if type == "timeout":
+                time = data.get('time')
+                embed.add_field(name="Time: ", value=f"{time} seconds", inline=False)
+            await ctx.followup.send(embed=embed)
+        else:
+            await ctx.followup.send("There is no punishment under this ID.")
 
 
 def setup(bot):
