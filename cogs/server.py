@@ -4,7 +4,7 @@ from discord.ext import commands
 
 class VerifyView(discord.ui.View):
     @discord.ui.button(label="Verify", style=discord.ButtonStyle.green)
-    async def button_callback(self, button, interaction: discord.Interaction):
+    async def button_callback(self : commands.Bot, button, interaction: discord.Interaction):
         for guild in self.bot.guilds:
             verify_filter = {"guild_id": guild.id}
             data = await self.verify.find_by_custom(verify_filter)
@@ -16,11 +16,9 @@ class VerifyView(discord.ui.View):
             else:
                 print("No data found.")
 
-
 class Server(commands.Cog):
     def __init__(self, bot : commands.Bot):
         self.bot = bot
-
 
     @commands.slash_command(name="setupverify", description="Sets up the verification command.")
     @commands.has_guild_permissions(manage_guild=True)
