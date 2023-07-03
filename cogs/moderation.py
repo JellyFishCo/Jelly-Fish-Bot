@@ -213,9 +213,9 @@ class Moderation(commands.Cog):
             embed = discord.Embed(title="Punishment Lookup", description=f"Here is the following details for punishment ID {punishment_id}", color=discord.Color.blue())
             embed.add_field(name="Punishment Type: ", value=f"{type}", inline=False)
             embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
-            embed.add_field(name="Moderator: ", value=f"{moderator}", inline=False)
+            embed.add_field(name="Moderator: ", value=f"<@!{moderator}>", inline=False)
             date = datetime.datetime.fromtimestamp(timestamp)
-            embed.add_field(name="Date: ", value=f"{date}", inline=False)
+            embed.add_field(name="Date: ", value=f"{date.day}-{date.month}-{date.year}", inline=False)
             if type == "timeout":
                 time = data.get('time')
                 embed.add_field(name="Time: ", value=f"{time} seconds", inline=False)
