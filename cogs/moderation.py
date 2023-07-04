@@ -205,20 +205,24 @@ class Moderation(commands.Cog):
         punishment_filter = {"punishment_id": punishment_id}
         data = await self.bot.punishments.find_by_custom(punishment_filter)
         if data:
-            reason = data.get('reason')
-            type = data.get('type')
-            moderator = data.get('moderator')
-            timestamp = data.get('timestamp')
-            embed = discord.Embed(title="Punishment Lookup", description=f"Here is the following details for punishment ID {punishment_id}", color=discord.Color.blue())
-            embed.add_field(name="Punishment Type: ", value=f"{type}", inline=False)
-            embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
-            embed.add_field(name="Moderator: ", value=f"<@!{moderator}>", inline=False)
-            date = datetime.datetime.fromtimestamp(timestamp)
-            embed.add_field(name="Date: ", value=f"{date.day}-{date.month}-{date.year}", inline=False)
-            if type == "timeout":
-                time = data.get('time')
-                embed.add_field(name="Time: ", value=f"{time} seconds", inline=False)
-            await ctx.followup.send(embed=embed)
+            guild_id = data.get('guild_id')
+            if ctx.guild.id == guild_id:    
+                reason = data.get('reason')
+                type = data.get('type')
+                moderator = data.get('moderator')
+                timestamp = data.get('timestamp')
+                embed = discord.Embed(title="Punishment Lookup", description=f"Here is the following details for punishment ID {punishment_id}", color=discord.Color.blue())
+                embed.add_field(name="Punishment Type: ", value=f"{type}", inline=False)
+                embed.add_field(name="Reason: ", value=f"{reason}", inline=False)
+                embed.add_field(name="Moderator: ", value=f"<@!{moderator}>", inline=False)
+                date = datetime.datetime.fromtimestamp(timestamp)
+                embed.add_field(name="Date: ", value=f"{date.day}-{date.month}-{date.year}", inline=False)
+                if type == "timeout":
+                    time = data.get('time')
+                    embed.add_field(name="Time: ", value=f"{time} seconds", inline=False)
+                await ctx.followup.send(embed=embed)
+            else:
+                await ctx.followup.send("You can only view punishment information of users in your guild.")
         else:
             await ctx.followup.send("There is no punishment under this ID.")
 
