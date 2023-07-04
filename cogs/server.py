@@ -4,18 +4,18 @@ from discord.ext import commands
 
 class VerifyView(discord.ui.View):
     @discord.ui.button(label="Verify", style=discord.ButtonStyle.green)
-    async def button_callback(self : commands.Bot, button, interaction: discord.Interaction):
-        for guild in self.bot.guilds:
-            verify_filter = {"guild_id": guild.id}
-            data = await self.verify.find_by_custom(verify_filter)
-            if data:
-                role_id = data.get('role_id')
-                role = discord.utils.get(guild.roles, id=role_id)
-                await interaction.user.add_roles(role)
-                await interaction.response.send_message("Verification Complete! :white_check_mark:", ephemeral=True)
-            else:
-                print("No data found.")
-
+    async def button_callback(self, button, interaction: discord.Interaction):
+        guild = interaction.user.guild
+        verify_filter = {"guild_id": guild.id}
+        data = await self.verify.find_by_custom(verify_filter)
+        if data:
+            role_id = data.get('role_id')
+            role = discord.utils.get(guild.roles, id=role_id)
+            await interaction.user.add_roles(role)
+            await interaction.response.send_message("Verification Complete! :white_check_mark:", ephemeral=True)
+        else:
+            print("No data found.")
+                
 class Server(commands.Cog):
     def __init__(self, bot : commands.Bot):
         self.bot = bot
