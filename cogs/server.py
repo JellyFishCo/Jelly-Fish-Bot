@@ -39,6 +39,13 @@ class Server(commands.Cog):
         await channel.purge(limit=1)
         await channel.send(embed=embed, view=VerifyView(timeout=None))
         await ctx.followup.send("Verification has been setup! :white_check_mark:")
+    
+    @setupverify.error
+    async def setupverify_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.respond("You do not have permission to run this command!\nYou are missing the `manage_guild` permission.")
+        else:
+            print(error)
 
     @commands.slash_command(name="setupwelcome", description="Sets up welcome messages.")
     @commands.has_guild_permissions(manage_guild=True)
@@ -53,6 +60,13 @@ class Server(commands.Cog):
         else:
             await self.bot.welcome.insert(data)
         await ctx.followup.send("Welcome messages has been setup! :white_check_mark:")
+
+    @setupwelcome.error
+    async def setupwelcome_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.respond("You do not have permission to run this command!\nYou are missing the `manage_guild` permission.")
+        else:
+            print(error)
 
 def setup(bot):
     bot.add_cog(Server(bot))

@@ -187,6 +187,14 @@ class Moderation(commands.Cog):
         await self.bot.punishments.upsert_custom(timeout_filter, timeout_data)
         await member.send(embed=memberEmbed)
         
+    @timeout.error
+    async def timeout_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.respond("You do not have permissions to run this command!\nYou are missing the `moderate_members` permission.")
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.respond("I do not have the right permissions!\nI am missing the `moderate_members` permission.")
+        else:
+            print(error)
 
     @commands.slash_command(name="nickname", description="Changes the nickname of the specified person.")
     @commands.has_guild_permissions(manage_nicknames=True)
@@ -197,6 +205,15 @@ class Moderation(commands.Cog):
         embed = discord.Embed(title="Nickname Changed", description=f"I have changed their nickname to {nickname}", color=discord.Color.blue())
         await member.edit(nick=nickname)
         await ctx.followup.send(embed=embed)
+
+    @nickname.error
+    async def nickname_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.respond("You do not have permission to run this command!\nYou are missing the `manage_nicknames` permission.")
+        elif isinstance(error, commands.BotMissingPermissions):
+            await ctx.respond("I do not have the right permissions!\nI am missing the `manage_nicknames` permission.")
+        else:
+            print(error)
 
     @commands.slash_command(name="punishment-lookup", description="Look up a users punishment using the given punishment ID.")
     @commands.has_guild_permissions(moderate_members=True)
@@ -225,6 +242,13 @@ class Moderation(commands.Cog):
                 await ctx.followup.send("You can only view punishment information of users in your guild.")
         else:
             await ctx.followup.send("There is no punishment under this ID.")
+
+    @punishment_lookup.error
+    async def punishment_lookup_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.respond("You do not have permission to run this command!\nYou are missing the `moderate_members` permission.")
+        else:
+            print(error)
 
 
 def setup(bot):
