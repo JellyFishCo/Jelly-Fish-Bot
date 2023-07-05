@@ -11,8 +11,11 @@ class VerifyView(discord.ui.View):
         if data:
             role_id = data.get('role_id')
             role = discord.utils.get(guild.roles, id=role_id)
-            await interaction.user.add_roles(role)
-            await interaction.response.send_message("Verification Complete! :white_check_mark:", ephemeral=True)
+            try:
+                await interaction.user.add_roles(role)
+                await interaction.response.send_message("Verification Complete! :white_check_mark:", ephemeral=True)
+            except discord.DiscordException as e:
+                await interaction.response.send_message(f"An error has occured! I appears my role is lower than the role that is trying to be given. Please send this error to the developer. ```{e}```")
         else:
             print("No data found.")
                 
